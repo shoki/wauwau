@@ -1,0 +1,47 @@
+#!/bin/sh
+#/etc/init.d/wauwau: start watchdog daemon.
+
+test -x /usr/sbin/wauwau || exit 0
+
+# Set run_watchdog to 1 to start watchdog or 0 to disable it.
+run_watchdog=1
+
+# Used by debmake as an argument to update-rc.d.
+FLAGS="defaults 10"
+
+case "$1" in
+  start)
+    if [ $run_watchdog = 1 ]
+    then
+	echo -n "Starting wauwau watchdog: "
+	if start-stop-daemon --start --quiet --exec /usr/sbin/wauwau 
+	then
+	    echo done.
+	else
+	    echo failed.
+	fi
+    fi
+    ;;
+
+  stop)
+    if [ $run_watchdog = 1 ]
+    then
+	echo -n "Stopping wauwau watchdog: "
+        # need to stop daemon with SIGINT to disable the watchdog properly.
+        # SIGTERM and all other signals will just let the watchdog timeout
+        if start-stop-daemon --stop --signal 2 --quiet --pidfile /var/run/wauwau.pid
+	then
+	    echo done.
+	else
+	    echo failed.
+	fi
+    fi
+    ;;
+
+  *)
+    echo "Usage: /etc/init.d/wauwau {start|stop}"
+    exit 1
+
+esac
+
+exit 0
