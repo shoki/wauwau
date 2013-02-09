@@ -1,5 +1,4 @@
 /******************************************************************************
- *  (C)opyright 2007 KWICK! Community GmbH, All Rights Reserved
  *  (C)opyright 2007 Andre Pascha <shoki@bsdler.de>, All Rights Reserved
  *
  *       Title: Linux watchdog daemon
